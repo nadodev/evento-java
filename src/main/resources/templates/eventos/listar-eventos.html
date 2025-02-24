@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Eventos Disponíveis</title>
+    <style>
+        /* Estilos Gerais */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+
+        /* Mensagens */
+        .message {
+            padding: 15px;
+            background: #ffeb3b;
+            color: #333;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Cards de Evento */
+        .event-card {
+            background: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .event-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .event-card p {
+            color: #555;
+            margin: 5px 0;
+        }
+
+        /* Botões */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-primary:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .btn-success {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #27ae60;
+        }
+
+        /* Mensagem de Evento Lotado */
+        .text-danger {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .event-card {
+                padding: 15px;
+            }
+
+            .btn {
+                width: 100%;
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Eventos Disponíveis</h1>
+
+    <!-- Mensagem de Feedback -->
+    <div th:if="${mensagem}" class="message">
+        <p th:text="${mensagem}"></p>
+    </div>
+
+    <!-- Lista de Eventos -->
+    <div th:each="evento : ${eventos}" class="event-card">
+        <h3 th:text="${evento.nome}"></h3>
+        <p>Vagas disponíveis:
+            <span th:text="${evento.vagasDisponiveis}"></span> /
+            <span th:text="${evento.vagasTotal}"></span>
+        </p>
+
+        <!-- Botão para Ver Participantes -->
+        <a th:href="@{'/eventos/' + ${evento.id} + '/participantes'}" class="btn btn-primary">
+            Ver Participantes
+        </a>
+
+        <!-- Botão de Participação -->
+        <div th:if="${evento.currentUserParticipating}">
+            <button class="btn btn-primary" disabled>Você está participando</button>
+        </div>
+        <div th:unless="${evento.currentUserParticipating}">
+            <form th:action="@{/participar}" method="post">
+                <input type="hidden" name="eventoId" th:value="${evento.id}">
+                <button type="submit"
+                        class="btn btn-primary"
+                        th:disabled="${evento.vagasDisponiveis} <= 0">
+                    Participar
+                </button>
+            </form>
+        </div>
+
+        <!-- Mensagem de Evento Lotado -->
+        <div th:if="${evento.vagasDisponiveis} == 0" class="text-danger">
+            Evento lotado!
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

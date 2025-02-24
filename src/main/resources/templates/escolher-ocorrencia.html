@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Escolher Ocorrência</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<h1>Escolha uma Ocorrência</h1>
+
+<div th:if="${mensagem}">
+    <p th:text="${mensagem}" class="mensagem"></p>
+</div>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Nome</th>
+        <th>Data de Início</th>
+        <th>Ação</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ocorrencia : ${ocorrencias}">
+        <td th:text="${ocorrencia.nome}"></td>
+        <td th:text="${#temporals.format(ocorrencia.dataInicio, 'dd/MM/yyyy HH:mm')}"></td>
+        <td>
+            <form th:action="@{/participar}" method="post">
+                <input type="hidden" name="eventoId" th:value="${ocorrencia.id}">
+                <button type="submit" class="btn btn-primary">Participar</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/eventos">Voltar para eventos</a>
+
+</body>
+</html>

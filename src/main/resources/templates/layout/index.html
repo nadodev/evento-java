@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:insert="${pageTitle}">Desafio Técnico</title>
+
+</head>
+<body>
+<header th:replace="layout/header :: header"></header>
+
+<nav th:replace="layout/nav :: nav"></nav>
+
+<div id="content">
+    <section th:insert="this :: content"></section>
+</div>
+</body>
+</html>

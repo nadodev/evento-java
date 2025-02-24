@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Participantes do Evento</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Participantes do Evento</h1>
+
+    <!-- Mensagem de erro, se houver -->
+    <div th:if="${mensagem != null}" class="alert alert-warning" th:text="${mensagem}"></div>
+
+    <!-- Detalhes do Evento -->
+    <div th:if="${evento != null}">
+        <h2 th:text="${evento.nome}"></h2>
+        <p th:text="${evento.descricao}"></p>
+        <p>
+            <strong>Data de Início:</strong>
+            <span th:text="${evento.dataInicio != null} ? ${#temporals.format(evento.dataInicio, 'dd/MM/yyyy HH:mm')} : 'Não informada'"></span>
+        </p>
+        <p>
+            <strong>Data de Término:</strong>
+            <span th:text="${evento.dataFim != null} ? ${#temporals.format(evento.dataFim, 'dd/MM/yyyy HH:mm')} : 'Não informada'"></span>
+        </p>
+    </div>
+
+    <!-- Lista de Participantes -->
+    <h3>Participantes</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="participante : ${ participantes}">
+            <td th:text="${participante.username}"></td>
+            <td th:text="${participante.id}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Link para voltar à lista de eventos -->
+    <a th:href="@{/eventos}" class="btn btn-secondary">Voltar para Eventos</a>
+</div>
+</body>
+</html>

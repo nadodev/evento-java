@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{layout/head :: head}"></div>
+<body>
+<div th:replace="~{layout/header :: header}"></div>
+<style>
+    /* Estilo para o formulário */
+    form {
+        background-color: #f9f9f9;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 50px auto;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* Estilo para os campos de entrada */
+    .form-control {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 10px;
+        font-size: 14px;
+        max-width: 600px;
+    }
+
+    /* Label */
+    .form-label {
+        font-weight: bold;
+        color: #333;
+        width: 100%;
+        display: block;
+    }
+
+    /* Botão de envio */
+    button[type="submit"] {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        max-width: 600px;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    /* Caixa de texto (textarea) */
+    textarea.form-control {
+        resize: vertical;
+        max-width: 600px;
+    }
+
+    /* Estilo para a seção do formulário */
+    .mb-3 {
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        text-align: start;
+    }
+
+    /* Ajuste no campo de checkboxes */
+    input[type="checkbox"] {
+        margin-right: 10px;
+    }
+
+    /* Estilo do título do formulário */
+    h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #444;
+    }
+
+    /* Estilo do contêiner principal */
+    .container {
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    /* Para telas pequenas */
+    @media (max-width: 768px) {
+        form {
+            padding: 20px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+        }
+    }
+</style>
+<div class="container mt-5">
+    <h2>Cadastrar Evento</h2>
+    <form th:action="@{/api/eventos/register}" method="post" th:object="${evento}">
+        <!-- Nome do Evento -->
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome</label>
+            <input type="text" id="nome" class="form-control" th:field="*{nome}" required>
+        </div>
+
+        <!-- Tipo do Evento -->
+        <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo</label>
+            <input type="text" id="tipo" class="form-control" th:field="*{tipo}" required>
+        </div>
+
+        <!-- Descrição do Evento -->
+        <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <textarea id="descricao" class="form-control" th:field="*{descricao}" rows="4"></textarea>
+        </div>
+
+        <!-- Chave PIX -->
+        <div class="mb-3">
+            <label for="chavePix" class="form-label">Chave PIX</label>
+            <input type="text" id="chavePix" class="form-control" th:field="*{chavePix}">
+        </div>
+
+        <!-- Data de Início -->
+        <div class="mb-3">
+            <label for="dataInicio" class="form-label">Data de Início</label>
+            <input type="datetime-local" id="dataInicio" class="form-control" th:field="*{dataInicio}" required>
+        </div>
+
+        <!-- Data de Fim -->
+        <div class="mb-3">
+            <label for="dataFim" class="form-label">Data de Fim</label>
+            <input type="datetime-local" id="dataFim" class="form-control" th:field="*{dataFim}" required>
+        </div>
+
+        <!-- Vagas Totais -->
+        <div class="mb-3">
+            <label for="vagasTotal" class="form-label">Vagas Totais</label>
+            <input type="number" id="vagasTotal" class="form-control" th:field="*{vagasTotal}" min="1" required>
+        </div>
+
+        <!-- Vagas Disponíveis -->
+        <div class="mb-3">
+            <label for="vagasDisponiveis" class="form-label">Vagas Disponíveis</label>
+            <input type="number" id="vagasDisponiveis" class="form-control" th:field="*{vagasDisponiveis}" min="0" required>
+        </div>
+
+        <!-- Recorrente (Checkbox) -->
+        <div class="mb-3">
+            <label for="recorrente" class="form-label">Recorrente</label>
+            <input type="checkbox" id="recorrente" th:field="*{recorrente}">
+        </div>
+
+        <!-- Seção de Recorrência (visível apenas se "Recorrente" estiver marcado) -->
+        <div id="recorrenciaSection" style="display: none;">
+            <!-- Frequência do Evento -->
+            <div class="mb-3">
+                <label for="frequencia" class="form-label">Frequência</label>
+                <input type="text" id="frequencia" class="form-control" th:field="*{frequencia}">
+            </div>
+
+            <!-- Dia da Semana (se recorrente) -->
+            <div class="mb-3">
+                <label for="diaSemana" class="form-label">Dia da Semana</label>
+                <input type="number" id="diaSemana" class="form-control" th:field="*{diaSemana}" min="0" max="6">
+            </div>
+
+            <!-- Intervalo -->
+            <div class="mb-3">
+                <label for="intervalo" class="form-label">Intervalo (em dias)</label>
+                <input type="number" id="intervalo" class="form-control" th:field="*{intervalo}" min="1">
+            </div>
+
+            <!-- Data de Início da Recorrência -->
+            <div class="mb-3">
+                <label for="dataInicioRecorrencia" class="form-label">Data de Início da Recorrência</label>
+                <input type="datetime-local" id="dataInicioRecorrencia" class="form-control" th:field="*{dataInicioRecorrencia}">
+            </div>
+
+            <!-- Data de Fim da Recorrência -->
+            <div class="mb-3">
+                <label for="dataFimRecorrencia" class="form-label">Data de Fim da Recorrência</label>
+                <input type="datetime-local" id="dataFimRecorrencia" class="form-control" th:field="*{dataFimRecorrencia}">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Cadastrar Evento</button>
+    </form>
+</div>
+
+<script>
+    // Mostra/oculta a seção de recorrência com base no checkbox
+    document.getElementById('recorrente').addEventListener('change', function() {
+        const recorrenciaSection = document.getElementById('recorrenciaSection');
+        recorrenciaSection.style.display = this.checked ? 'block' : 'none';
+    });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
